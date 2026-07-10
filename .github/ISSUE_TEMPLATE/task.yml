@@ -1,0 +1,45 @@
+name: Task
+description: A single unit of work — implementation task, chore, or sub-issue of an epic
+labels: [task]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to be done and why?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      placeholder: |
+        - [ ] 
+        - [ ] 
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation Notes
+      description: Relevant context, constraints, or approach hints. Leave blank if none.
+
+  - type: input
+    id: epic
+    attributes:
+      label: Parent Epic
+      placeholder: "e.g. #42"
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
