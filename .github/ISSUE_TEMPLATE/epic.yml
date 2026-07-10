@@ -1,0 +1,81 @@
+name: Epic
+description: A large body of work composed of multiple features or user stories
+labels: [epic]
+body:
+  - type: markdown
+    attributes:
+      value: "An epic captures a high-level goal. Break it down into individual feature or task issues and link them below."
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What outcome does this epic deliver? One clear statement of value.
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: Background & Context
+      description: Why is this needed? What's the current state and what problem does it solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: In Scope
+      description: What is explicitly included in this epic?
+      placeholder: |
+        - 
+        - 
+    validations:
+      required: true
+
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of Scope
+      description: What is explicitly excluded to prevent scope creep?
+      placeholder: |
+        - 
+        - 
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: How do we know this epic is done?
+      placeholder: |
+        - [ ] 
+        - [ ] 
+    validations:
+      required: true
+
+  - type: textarea
+    id: child_issues
+    attributes:
+      label: Child Issues
+      description: Link the individual issues that make up this epic.
+      placeholder: |
+        - [ ] #
+        - [ ] #
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+
+  - type: input
+    id: milestone
+    attributes:
+      label: Target Milestone / Quarter
+      placeholder: e.g. Q3 2026 or v2.0
