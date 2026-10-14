@@ -11,6 +11,9 @@ body:
         this in. Don't invent commits, decisions, or follow-ups that weren't
         explicitly made or discussed.
 
+        Keep the issue title under 80 characters and the full body under
+        500 words.
+
   - type: dropdown
     id: outcome
     attributes:
