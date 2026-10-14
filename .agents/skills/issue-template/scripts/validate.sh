@@ -4,7 +4,7 @@ set -euo pipefail
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(git -C "$script_dir" rev-parse --show-toplevel)"
 if ! command -v ruby >/dev/null 2>&1; then
-  echo "Error: Ruby 3 or later is required." >&2
+  echo "Error: Ruby is required." >&2
   exit 2
 fi
 
@@ -15,9 +15,11 @@ fi
 files=()
 for target in "$@"; do
   if [[ -d "$target" ]]; then
-    while IFS= read -r -d '' file; do
-      files+=("$file")
-    done < <(find "$target" -maxdepth 1 -type f -name '*.yml' -print0 | sort -z)
+    shopt -s nullglob
+    for file in "$target"/*.yml; do
+      [[ -f "$file" ]] && files+=("$file")
+    done
+    shopt -u nullglob
   else
     files+=("$target")
   fi
@@ -34,6 +36,7 @@ require "yaml"
 TOP_LEVEL_KEYS = %w[name description title labels assignees type projects body].freeze
 FORM_TYPES = %w[markdown input textarea dropdown checkboxes upload].freeze
 FORBIDDEN_KEYWORDS = %w[y yes n no true false on off].freeze
+STRING_VALUE_KEYS = %w[name description title labels assignees type projects id label placeholder value render options].freeze
 SENSITIVE_LABEL_TERMS = /\b(?:password|passcode|secret|token|credential|private[ -]key|api[ -]key)\b/i
 
 def nonblank_string?(value)
@@ -65,6 +68,8 @@ end
 
 def find_duplicate_yaml_keys(node, errors, path)
   case node
+  when Psych::Nodes::Document, Psych::Nodes::Stream
+    node.children.each { |child| find_duplicate_yaml_keys(child, errors, path) }
   when Psych::Nodes::Mapping
     seen = {}
     node.children.each_slice(2) do |key_node, value_node|
@@ -78,6 +83,25 @@ def find_duplicate_yaml_keys(node, errors, path)
     end
   when Psych::Nodes::Sequence
     node.children.each { |child| find_duplicate_yaml_keys(child, errors, path) }
+  end
+end
+
+def find_unquoted_boolean_strings(node, errors, context = nil)
+  case node
+  when Psych::Nodes::Document, Psych::Nodes::Stream
+    node.children.each { |child| find_unquoted_boolean_strings(child, errors, context) }
+  when Psych::Nodes::Mapping
+    node.children.each_slice(2) do |key_node, value_node|
+      key = key_node.is_a?(Psych::Nodes::Scalar) ? key_node.value : nil
+      find_unquoted_boolean_strings(value_node, errors, key)
+    end
+  when Psych::Nodes::Sequence
+    node.children.each { |child| find_unquoted_boolean_strings(child, errors, context) }
+  when Psych::Nodes::Scalar
+    boolean_word = %w[y yes n no true false on off].include?(node.value.downcase)
+    if node.plain && boolean_word && STRING_VALUE_KEYS.include?(context)
+      errors << "unquoted boolean-like string #{node.value.inspect} under #{context.inspect} must be quoted"
+    end
   end
 end
 
@@ -115,7 +139,10 @@ def validate_form(file)
 
   begin
     syntax_tree = Psych.parse_file(file)
-    find_duplicate_yaml_keys(syntax_tree, errors, file) if syntax_tree
+    if syntax_tree
+      find_duplicate_yaml_keys(syntax_tree, errors, file)
+      find_unquoted_boolean_strings(syntax_tree, errors)
+    end
     form = YAML.safe_load_file(file, permitted_classes: [], aliases: false)
   rescue Psych::Exception => error
     errors << "invalid YAML: #{error.message.lines.first.strip}"

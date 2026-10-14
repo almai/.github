@@ -17,7 +17,7 @@ Create clear, actionable GitHub issue forms that gather the minimum information 
 ## Prerequisites
 
 - Work from the repository root and use the existing issue forms as local examples.
-- `scripts/validate.sh` requires Ruby 3 or later; it uses only Ruby's standard library.
+- `scripts/validate.sh` requires Ruby; it uses only Ruby's standard library.
 
 ## Workflow
 
