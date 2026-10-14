@@ -7,6 +7,7 @@ Org-level configuration for GitHub Copilot and community health files.
 | Path | Purpose |
 |---|---|
 | `.github/copilot-instructions.md` | Org-wide Copilot coding standards — copy into any repo's `.github/` to activate |
+| `.github/ISSUE_TEMPLATE/session-summary.md` | Default issue template for session-summary logs — applies automatically to any repo under this account without its own `ISSUE_TEMPLATE/` |
 
 ## Usage
 
@@ -18,3 +19,8 @@ mkdir -p .github && mv copilot-instructions.md .github/
 ```
 
 Or add it as a git submodule / copy it manually.
+
+The issue template needs no copying — GitHub serves `.github/ISSUE_TEMPLATE/session-summary.md`
+as a default template for any repository under this account that doesn't have its own
+`.github/ISSUE_TEMPLATE/` folder, as long as this repo stays public. A repo with its own
+template folder overrides this default.
