@@ -1,0 +1,92 @@
+name: Session summary
+description: Summarize a dotfiles-repo work session for later reference
+labels: [session-log]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Base every field on ground truth, not memory: run
+        `git log --oneline <range>` (and `git log --stat <range>` if you need
+        per-commit file lists) for the session's commit range before filling
+        this in. Don't invent commits, decisions, or follow-ups that weren't
+        explicitly made or discussed.
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      description: How did the session end?
+      options:
+        - Shipped clean
+        - Shipped with follow-ups
+        - Partial / blocked
+        - Exploratory / spike
+    validations:
+      required: true
+
+  - type: dropdown
+    id: focus_area
+    attributes:
+      label: Focus Area
+      description: What kind of work was this, predominantly?
+      options:
+        - Feature
+        - Bug fix
+        - Refactor
+        - Audit / review
+        - Tooling / infra
+        - Docs
+        - Mixed
+    validations:
+      required: true
+
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: One paragraph — what the session set out to do and what it ended with.
+    validations:
+      required: true
+
+  - type: textarea
+    id: commits
+    attributes:
+      label: Commits
+      description: >
+        One bullet per commit, in chronological order. Pull the list from
+        `git log --oneline <range>` — don't paraphrase subjects, copy them.
+      placeholder: |
+        - `<sha>` <subject> — <what it changed and why>
+        - `<sha>` <subject> — <what it changed and why>
+    validations:
+      required: true
+
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Decisions & Rationale
+      description: >
+        Calls made during the session worth remembering later, as
+        "chose X over Y because Z". Leave blank if none.
+      placeholder: |
+        - Chose <X> over <Y> because <Z>.
+
+  - type: textarea
+    id: follow_ups
+    attributes:
+      label: Open / Follow-up Tasks
+      description: >
+        Only items explicitly flagged as unresolved or deferred during the
+        session — nothing fabricated. Write "None" if nothing is outstanding.
+      placeholder: |
+        - [ ] <task>
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: >
+        Optional — lessons learned, gotchas, or context a future session
+        needs that doesn't fit the sections above.
