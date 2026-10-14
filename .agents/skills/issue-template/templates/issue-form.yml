@@ -1,0 +1,33 @@
+name: "Issue Report"
+description: "Describe an issue and the information maintainers need to assess it."
+title: "[Issue]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Please provide focused, reproducible details. Do not include passwords, tokens, or other secrets."
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What are you trying to do, and what problem or need prompted this issue?
+      placeholder: A concise description of the issue and its impact.
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Include relevant context, steps, expected behavior, or constraints for this report type.
+      placeholder: Add the details maintainers need to understand and act on this issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Links, screenshots, or other relevant context. Leave blank if not applicable.
+    validations:
+      required: false
