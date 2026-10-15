@@ -241,7 +241,7 @@ def validate_form(file)
         end
         if attributes.key?("default")
           default = attributes["default"]
-          if !default.is_a?(Integer) || default.negative? || default >= options.length
+          if !default.is_a?(Integer) || default.negative? || (!options.empty? && default >= options.length)
             errors << "#{path}.attributes.default must be a valid zero-based option index"
           end
           if options.any? { |option| %w[none n/a].include?(option.strip.downcase) }
