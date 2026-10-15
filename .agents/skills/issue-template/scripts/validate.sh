@@ -98,7 +98,7 @@ def find_unquoted_boolean_strings(node, errors, context = nil)
   when Psych::Nodes::Sequence
     node.children.each { |child| find_unquoted_boolean_strings(child, errors, context) }
   when Psych::Nodes::Scalar
-    boolean_word = %w[y yes n no true false on off].include?(node.value.downcase)
+    boolean_word = FORBIDDEN_KEYWORDS.include?(node.value.downcase)
     if node.plain && boolean_word && STRING_VALUE_KEYS.include?(context)
       errors << "unquoted boolean-like string #{node.value.inspect} under #{context.inspect} must be quoted"
     end
